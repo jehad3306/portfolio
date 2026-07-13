@@ -13,6 +13,8 @@ body::after{content:"";position:fixed;inset:0;z-index:100;pointer-events:none;op
 .nav a::after{content:"";position:absolute;left:0;right:100%;bottom:-4px;height:1.5px;background:var(--ink);transition:right .3s var(--ease);}
 .nav a:hover,.nav a:focus-visible{opacity:1;}
 .nav a:hover::after,.nav a:focus-visible::after{right:0;}
+/* narrow screens: shrink the name so it can't collide with the nav links */
+@media(max-width:560px){.nav>span{font-size:10px;letter-spacing:.1em;}}
 
 .hero{position:relative;height:100svh;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;}
 .crop{position:absolute;width:20px;height:20px;z-index:6;opacity:.5;}
