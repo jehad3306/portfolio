@@ -1,0 +1,78 @@
+---
+// World — one reusable immersive case-study shell, fed each project's data.
+// Common chrome (section, close button, optional embers canvas, header, meta,
+// rows) is data-driven; each world's bespoke media is passed via the default slot.
+interface MetaItem { label: string; value: string; }
+interface Row { h: string; p?: string; chips?: string[]; }
+interface Intro { img: string; alt: string; }
+interface Cover { img: string; alt: string; }
+
+interface Props {
+  id: string;
+  kick: string;
+  title: string;              // HTML allowed (em / span.ar)
+  lede: string;
+  meta: MetaItem[];
+  rows: Row[];
+  mediaLabel: string;
+  intro?: Intro | null;       // w3: header sits left, spotlight phone right
+  cover?: Cover | null;       // w2: cover image between meta and rows
+  divider?: string | null;    // "Behind it"
+  embers?: boolean;           // w2: ember canvas behind content
+}
+
+const {
+  id, kick, title, lede, meta, rows, mediaLabel,
+  intro = null, cover = null, divider = null, embers = false,
+} = Astro.props;
+
+const titleId = `${id}t`;
+---
+<section class="world" id={id} role="dialog" aria-modal="true" aria-labelledby={titleId}>
+  {embers && <canvas id="embers"></canvas>}
+  <button class="wclose" data-close>close ✕</button>
+  <div class="case">
+    {intro ? (
+      <div class="intro3">
+        <div>
+          <p class="wkick wa">{kick}</p>
+          <h1 class="wtitle wa" id={titleId} set:html={title}></h1>
+          <p class="wlede wa">{lede}</p>
+          <div class="wmeta wa">
+            {meta.map((m) => <div><b>{m.label}</b>{m.value}</div>)}
+          </div>
+        </div>
+        <figure class="spot wa"><img alt={intro.alt} src={intro.img}></figure>
+      </div>
+    ) : (
+      <>
+        <p class="wkick wa">{kick}</p>
+        <h1 class="wtitle wa" id={titleId} set:html={title}></h1>
+        <p class="wlede wa">{lede}</p>
+        <div class="wmeta wa">
+          {meta.map((m) => <div><b>{m.label}</b>{m.value}</div>)}
+        </div>
+      </>
+    )}
+
+    {cover && (
+      <div class="cover-media wa"><img alt={cover.alt} src={cover.img}></div>
+    )}
+
+    {divider && <p class="wdivide wa">{divider}</p>}
+
+    {rows.map((row) => (
+      <div class="crow wa">
+        <h3>{row.h}</h3>
+        {row.chips
+          ? <div class="chips">{row.chips.map((c) => <span>{c}</span>)}</div>
+          : <p>{row.p}</p>}
+      </div>
+    ))}
+
+    <div class="media wa">
+      <p class="mlabel">{mediaLabel}</p>
+      <slot />
+    </div>
+  </div>
+</section>

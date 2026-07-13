@@ -1,0 +1,17 @@
+---
+// Hero — split two-column: text left, keyed B&W chair portrait right.
+// To swap the portrait later, just replace this one file:
+import portrait from '../assets/hero-portrait.png';
+---
+<header class="hero">
+  <span class="crop tl"></span><span class="crop tr"></span>
+  <div class="hleft">
+    <p class="hey">Portfolio — Moss, 2026</p>
+    <h1 class="hname"><span class="l1">Jehad</span><span class="l2">Babawat</span></h1>
+    <p class="htag">Fullstack developer — game programmer at heart. I build software the way games are built: to pull people in.</p>
+  </div>
+  <div class="hright">
+    <div class="subject" id="subject"><img alt="Jehad Babawat — studio portrait" src={portrait.src} width={portrait.width} height={portrait.height}></div>
+  </div>
+  <div class="hscroll">scroll ↓</div>
+</header>

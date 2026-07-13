@@ -1,0 +1,311 @@
+---
+import '../styles/global.css';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Work from '../components/Work.astro';
+import Contact from '../components/Contact.astro';
+import World from '../components/World.astro';
+
+// World media assets
+import flowCover from '../assets/flow-cover.jpg';
+import flowFig19 from '../assets/flow-fig19.jpg';
+import flowFig25 from '../assets/flow-fig25.jpg';
+import flowGameplay1 from '../assets/flow-gameplay-1.jpg';
+import flowGameplay2 from '../assets/flow-gameplay-2.jpg';
+import nidaaCountdown from '../assets/nidaa-countdown.jpg';
+import nidaaToday from '../assets/nidaa-today.jpg';
+import nidaaMonth from '../assets/nidaa-month.jpg';
+
+const w1 = {
+  id: 'w1',
+  kick: '01 — Client work',
+  title: 'Booking &amp; HR platform',
+  lede: 'One web platform for a Norwegian consultancy to run its people and its work — clients, employees, orders, messaging and feedback, in real time. Co-built from scratch; shipped, live, and still running.',
+  meta: [
+    { label: 'Client', value: 'Brobyggere AS' },
+    { label: 'Year', value: '2025' },
+    { label: 'Team', value: '2 developers' },
+    { label: 'Status', value: 'Live' },
+  ],
+  divider: 'Behind it',
+  rows: [
+    { h: 'The problem', p: 'Brobyggere had mobile apps, but operations lived scattered across tools — booking, HR and communication in different places, none of them talking. They needed close to everything in one place, on the web.' },
+    { h: 'What I did', p: 'My first industry project: I scoped the stack and set realistic expectations, then built the live chat, employee, customer and feedback modules — frontend logic and Firebase wiring, working AI-assisted the way modern teams do. I knew neither React nor Firebase at the start; learning while shipping a real product was the actual challenge, and it worked.' },
+    { h: 'The tech', chips: ['React', 'Firebase', 'Real-time', 'Full CRUD', 'Live chat'] },
+  ],
+  mediaLabel: 'Recreated screens — fictional data (the product is confidential)',
+};
+
+const w2 = {
+  id: 'w2',
+  embers: true,
+  kick: "02 — Master's thesis · Game AI",
+  title: 'Flow — <em>Steroid Zombies</em>',
+  lede: 'An isometric zombie survival shooter built in Unreal Engine 5 to test a question from flow theory: can a reinforcement-learning system that adjusts difficulty on the fly produce more flow in players than fixed difficulty settings?',
+  meta: [
+    { label: 'Context', value: 'MSc thesis, USN' },
+    { label: 'Year', value: '2026' },
+    { label: 'Role', value: 'Solo — design & code' },
+    { label: 'Status', value: 'Concluded' },
+  ],
+  cover: { img: flowCover.src, alt: 'Steroid Zombies — mid-wave gameplay' },
+  rows: [
+    { h: 'The game', p: 'WASD to move, mouse to aim, weapons to switch, buffs that spawn as resources run low. Each round sets a kill quota — and the fight answers back with more enemies, new types, harder ones.' },
+    { h: 'What I did', p: "Built the game solo in Unreal Engine 5 with Blueprints, designed the telemetry (health, damage taken, kills, accuracy, positioning, buff use), and ran a three-phase study: first test whether gameplay data can predict players' reported flow (15 players); then train a PPO reinforcement-learning agent against a simulated player, rewarding it for keeping each wave in a flow state; finally test the adaptive mode with 19 new players against static easy and hard modes." },
+    { h: 'The honest result', p: "The adaptive mode scored the highest mean flow of the three modes, with the tightest spread — but not by a statistically significant margin, and the trained agent developed a bias toward always increasing difficulty. The sharpest finding: reward design and training setup mattered as much as the algorithm itself. Honestly framed in the thesis as a technical proof of concept, in a genre where this hadn't been tested before." },
+    { h: 'The tech', chips: ['Unreal Engine 5', 'Blueprints', 'Reinforcement learning', 'Dynamic difficulty adjustment', 'Python', 'Telemetry'] },
+  ],
+  mediaLabel: 'From the thesis — what the agent learned, and how it landed',
+};
+
+const w3 = {
+  id: 'w3',
+  kick: '03 — Personal product · Android',
+  title: 'Nidaa <span class="ar">— نداء, "the call"</span>',
+  lede: 'A prayer-times app built in Oslo. A calm countdown to the next prayer, wudu reminders, the adhan as an exact alarm even with the phone locked — and rooms: one user imports a published monthly timetable, and their whole group follows it automatically. No accounts, no ads, no sprawl: one thing, done with care.',
+  meta: [
+    { label: 'Type', value: 'Personal product' },
+    { label: 'Year', value: '2026' },
+    { label: 'Role', value: 'Product & direction' },
+    { label: 'Status', value: 'Release candidate' },
+  ],
+  intro: { img: nidaaCountdown.src, alt: 'Nidaa — countdown to the next prayer' },
+  divider: 'Behind it',
+  rows: [
+    { h: 'The problem', p: 'Knowing when to pray should be effortless — and prayer is often shared: users and groups agreeing to pray together at set times. Nidaa solves both. A host creates a room, others join, and the same times live on every phone. The host can adjust them — for today, for the week, or for the whole month — and it updates for every member instantly.' },
+    { h: 'What I did', p: 'Everything except typing the code. I designed the product and directed Claude Code through twenty-one spec-first milestones: written specs before any code, implementation plans gated on my approval, riskiest work first with real-device spikes, and the baseline was proven with a full day on a real Samsung S21 — every prayer firing — and anything touching alarms was re-verified on device. Two structured audit passes, then I directed the hardening — security rules, failure guards, a unit-test suite on the critical paths.' },
+    { h: 'A design principle', p: "An audit found the alarm path could fall back to calculated times when a group's timetable lapsed — confidently ringing at the wrong time. I made the call that shaped the whole app: silence plus a visible warning beats wrong confidence. Every fallback in Nidaa now follows that rule." },
+    { h: 'Privacy by construction', p: 'No accounts — sync runs on an invisible anonymous identity — and analytics are four aggregate counters with no per-user trail.' },
+    { h: 'The tech', chips: ['React', 'Capacitor', 'Kotlin', 'Firebase', 'Exact alarms', 'Claude Code', '3 languages · RTL'] },
+  ],
+  mediaLabel: "More of the app — today's prayers & the month timetable",
+};
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jehad Babawat — fullstack developer, game programmer at heart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Space+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="nav">
+  <span>Jehad&nbsp;Babawat</span>
+  <div class="links"><a href="#about">About</a><a href="#work">Work</a><a href="#contact">Contact</a></div>
+</nav>
+
+<main id="home">
+  <Hero />
+  <About />
+  <Work />
+  <Contact />
+</main>
+
+<!-- WORLD 1 -->
+<World {...w1}>
+  <div class="saas">
+    <div class="mock booking">
+      <div class="mh"><span>Bookings — today</span><span class="dot"></span></div>
+      <div class="row"><span>Consultant A → Client N</span><span class="chip">09:00</span></div>
+      <div class="row"><span>Consultant B → Client K</span><span class="chip">11:30</span></div>
+      <div class="row"><span>Consultant C → Client S</span><span class="chip">14:00</span></div>
+    </div>
+    <div class="mock chat">
+      <div class="mh"><span>Live chat</span><span class="dot"></span></div>
+      <div class="b in">Order #482 updated — can you confirm the new hours?</div>
+      <div class="b out">Confirmed. Feedback form sent ✓</div>
+    </div>
+    <div class="mock sched">
+      <div class="mh"><span>Week view</span><span class="dot"></span></div>
+      <div class="grid">
+        <div class="cell f"></div><div class="cell"></div><div class="cell h"></div><div class="cell f"></div><div class="cell"></div><div class="cell h"></div><div class="cell"></div>
+        <div class="cell"></div><div class="cell f"></div><div class="cell f"></div><div class="cell"></div><div class="cell h"></div><div class="cell"></div><div class="cell f"></div>
+      </div>
+    </div>
+  </div>
+</World>
+
+<!-- WORLD 2 -->
+<World {...w2}>
+  <div class="figure-block">
+    <div class="figcap"><h4>Fig. 19 — the mechanism</h4>
+      <p>Over 1,000 training episodes the agent's choices collapsed toward one behavior: "Harder" climbed to ~90–95% while "Same" and "Easier" faded to zero. It was meant to balance the player up and down — instead it just kept cranking difficulty. That bias came from how I shaped the reward, not from the algorithm.</p></div>
+    <div class="figframe"><img alt="Figure 19 — action distribution over training: Harder dominates" src={flowFig19.src}></div>
+  </div>
+
+  <p class="bridge">So the agent was biased — but did players actually notice? The human study tells a more forgiving story.</p>
+
+  <div class="figure-block">
+    <div class="figcap"><h4>Fig. 25 — the outcome</h4>
+      <p>With 19 real players, the adaptive mode (DDA) produced the tightest, highest-centered spread of flow scores of the three conditions — but the margin over static Easy and Hard wasn't statistically significant. The system supported flow; it just didn't beat fixed difficulty.</p></div>
+    <div class="figframe"><img alt="Figure 25 — flow score distribution across Easy, Hard and DDA conditions" src={flowFig25.src}></div>
+  </div>
+  <div class="wshots">
+    <figure><img alt="Gameplay — holding a lane against the horde" src={flowGameplay1.src}><figcaption>Holding the lane</figcaption></figure>
+    <figure><img alt="Gameplay — surrounded, low resources" src={flowGameplay2.src}><figcaption>Surrounded, low on everything</figcaption></figure>
+  </div>
+</World>
+
+<!-- WORLD 3 -->
+<World {...w3}>
+  <div class="shots3">
+    <figure><img alt="Nidaa — today's prayer list with wudu and adhan toggles" src={nidaaToday.src}><figcaption>Today</figcaption></figure>
+    <figure><img alt="Nidaa — monthly mosque timetable" src={nidaaMonth.src}><figcaption>The month</figcaption></figure>
+  </div>
+</World>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Enlarged image">
+  <button class="lbclose" id="lbclose">close ✕</button>
+  <img id="lbimg" alt="">
+  <figcaption id="lbcap"></figcaption>
+</div>
+
+<script>
+import gsap from 'gsap';
+
+(function(){
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hasGsap=function(){return typeof gsap!=='undefined';};
+
+  var subject=document.getElementById('subject');
+  if(!reduce&&subject){
+    window.addEventListener('mousemove',function(e){
+      var nx=e.clientX/window.innerWidth-.5,ny=e.clientY/window.innerHeight-.5;
+      subject.style.transform='translateY('+(ny*-6)+'px) translateX('+(nx*-5)+'px)';
+    });
+  }
+
+  var reveals=document.querySelectorAll('.reveal');
+  function showAll(){reveals.forEach(function(n){n.classList.add('in');});}
+  if(reduce){ showAll(); }
+  else if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){
+      es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});
+    },{threshold:0.08, rootMargin:'0px 0px -8% 0px'});
+    reveals.forEach(function(n){io.observe(n);});
+    // fail-safe: reveal anything still hidden in the viewport, and never let content stay stuck
+    setTimeout(function(){
+      reveals.forEach(function(n){
+        var r=n.getBoundingClientRect();
+        if(r.top < window.innerHeight*1.2) n.classList.add('in');
+      });
+    }, 600);
+  } else {
+    showAll();
+  }
+
+  var home=document.getElementById('home');
+  var openWorld=null,lastFolder=null,scrollY=0,tl=null;
+
+  function showInstant(world){
+    world.classList.add('open');world.style.opacity=1;
+    world.querySelectorAll('.wa').forEach(function(n){n.style.opacity=1;n.style.transform='none';});
+    home.style.display='none';focusWorld(world);
+  }
+  function open(folder,ev){
+    var world=document.getElementById(folder.getAttribute('data-world'));
+    if(!world)return;
+    lastFolder=folder;openWorld=world;scrollY=window.scrollY;
+    document.body.style.overflow='hidden';
+    if(world.id==='w2')startEmbers();
+    if(reduce||!hasGsap()){showInstant(world);return;}
+    var x=(ev&&ev.clientX)||innerWidth/2,y=(ev&&ev.clientY)||innerHeight/2;
+    var rMax=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y));
+    world.classList.add('open');
+    if(tl)tl.kill();
+    gsap.set(world,{opacity:1,clipPath:'circle(0px at '+x+'px '+y+'px)'});
+    focusWorld(world);
+    tl=gsap.timeline()
+      .to(home,{scale:.985,opacity:.55,duration:.5,ease:'power2.out',transformOrigin:'50% 50%'},0)
+      .to(world,{clipPath:'circle('+rMax+'px at '+x+'px '+y+'px)',duration:.75,ease:'expo.inOut'},0)
+      .add(function(){gsap.set(world,{clipPath:'none'});home.style.display='none';})
+      .fromTo(world.querySelectorAll('.wa'),{opacity:0,y:20},{opacity:1,y:0,duration:.5,stagger:.05,ease:'power3.out'},'-=0.3');
+  }
+  function close(){
+    if(!openWorld)return;
+    var world=openWorld,folder=lastFolder;
+    home.style.display='';window.scrollTo(0,scrollY);stopEmbers();
+    function done(){
+      world.classList.remove('open');world.style.opacity=0;
+      if(hasGsap())gsap.set(world,{clipPath:'none'});
+      world.querySelectorAll('.wa').forEach(function(n){n.style.opacity='';n.style.transform='';});
+      document.body.style.overflow='';
+      if(folder)folder.focus();openWorld=null;
+    }
+    if(reduce||!hasGsap()){done();return;}
+    var r=folder.querySelector('.no').getBoundingClientRect();
+    var x=r.left+r.width/2,y=r.top+r.height/2;
+    var rMax=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y));
+    if(tl)tl.kill();
+    gsap.set(world,{clipPath:'circle('+rMax+'px at '+x+'px '+y+'px)'});
+    gsap.set(home,{scale:.985,opacity:.55});
+    tl=gsap.timeline()
+      .to(world.querySelectorAll('.wa'),{opacity:0,y:12,duration:.2,ease:'power2.in'},0)
+      .to(world,{clipPath:'circle(0px at '+x+'px '+y+'px)',duration:.65,ease:'expo.inOut'},0.05)
+      .to(home,{scale:1,opacity:1,duration:.5,ease:'power3.out'},'-=0.35')
+      .add(function(){done();});
+  }
+  function focusWorld(world){
+    var t=world.querySelector('.wtitle');
+    if(t){t.setAttribute('tabindex','-1');t.focus({preventScroll:true});}
+    world.scrollTop=0;
+  }
+  document.querySelectorAll('.folder[data-world]').forEach(function(f){f.addEventListener('click',function(ev){open(f,ev);});});
+  document.querySelectorAll('[data-close]').forEach(function(b){b.addEventListener('click',close);});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&openWorld&&!document.getElementById('lightbox').classList.contains('on'))close();});
+
+  /* embers — subtle, fixed behind w2 content */
+  var eCvs=document.getElementById('embers'),eCtx=eCvs?eCvs.getContext('2d'):null,eRaf=null,embers=[];
+  function startEmbers(){
+    if(reduce||!eCvs)return;
+    var w=innerWidth,h=innerHeight,dpr=Math.min(devicePixelRatio||1,2);
+    eCvs.width=w*dpr;eCvs.height=h*dpr;eCvs.style.width=w+'px';eCvs.style.height=h+'px';
+    eCtx.setTransform(dpr,0,0,dpr,0,0);
+    embers=[];for(var i=0;i<36;i++)embers.push(newEmber(w,h,true));
+    cancelAnimationFrame(eRaf);
+    (function loop(){
+      eCtx.clearRect(0,0,w,h);
+      for(var i=0;i<embers.length;i++){
+        var p=embers[i];
+        p.y-=p.v;p.x+=Math.sin(p.y*.02+p.ph)*.5;p.life-=.004;
+        if(p.y<-12||p.life<=0)embers[i]=newEmber(w,h,false);
+        eCtx.fillStyle='rgba('+p.col+','+(Math.max(0,p.life)*.8)+')';
+        eCtx.beginPath();eCtx.arc(p.x,p.y,p.r,0,Math.PI*2);eCtx.fill();
+      }
+      eRaf=requestAnimationFrame(loop);
+    })();
+  }
+  function newEmber(w,h,seed){
+    var hot=Math.random()<.4;
+    return {x:Math.random()*w,y:seed?Math.random()*h:h+10,
+      v:Math.random()*.8+.3,r:Math.random()*1.8+0.6,ph:Math.random()*6,
+      life:Math.random()*.7+.3,col:hot?'255,140,60':'227,53,43'};
+  }
+  function stopEmbers(){cancelAnimationFrame(eRaf);}
+  document.addEventListener('visibilitychange',function(){
+    if(document.hidden)stopEmbers();
+    else if(openWorld&&openWorld.id==='w2')startEmbers();
+  });
+
+  /* lightbox */
+  var lb=document.getElementById('lightbox'),lbimg=document.getElementById('lbimg'),lbcap=document.getElementById('lbcap');
+  function lbOpen(img,cap){lbimg.src=img.src;lbimg.alt=img.alt||'';lbcap.textContent=cap||img.alt||'';lb.classList.add('on');}
+  function lbClose(){lb.classList.remove('on');lbimg.src='';}
+  document.querySelectorAll('.wshots figure, .cover-media, .shots3 figure, .spot, #w2 .figframe').forEach(function(f){
+    f.addEventListener('click',function(e){
+      e.stopPropagation();
+      var img=f.querySelector('img'),cap=f.querySelector('figcaption');
+      lbOpen(img,cap?cap.textContent:'');
+    });
+  });
+  lb.addEventListener('click',lbClose);
+  document.getElementById('lbclose').addEventListener('click',function(e){e.stopPropagation();lbClose();});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&lb.classList.contains('on')){e.stopPropagation();lbClose();}});
+})();
+</script>
+</body>
+</html>
