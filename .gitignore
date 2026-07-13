@@ -35,3 +35,7 @@ jehad-site-v3-warm.html
 # local editor / tooling config
 .claude/
 .vscode/
+
+# icon source images (only the generated favicons in public/ ship)
+/J.png
+/icon-source.png
