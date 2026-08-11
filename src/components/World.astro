@@ -6,6 +6,7 @@ interface MetaItem { label: string; value: string; }
 interface Row { h: string; p?: string; chips?: string[]; }
 interface Intro { img: string; alt: string; }
 interface Cover { img: string; alt: string; }
+interface Cta { href: string; label: string; }
 
 interface Props {
   id: string;
@@ -19,11 +20,12 @@ interface Props {
   cover?: Cover | null;       // w2: cover image between meta and rows
   divider?: string | null;    // "Behind it"
   embers?: boolean;           // w2: ember canvas behind content
+  cta?: Cta | null;           // primary link to the live product
 }
 
 const {
   id, kick, title, lede, meta, rows, mediaLabel,
-  intro = null, cover = null, divider = null, embers = false,
+  intro = null, cover = null, divider = null, embers = false, cta = null,
 } = Astro.props;
 
 const titleId = `${id}t`;
@@ -38,6 +40,9 @@ const titleId = `${id}t`;
           <p class="wkick wa">{kick}</p>
           <h1 class="wtitle wa" id={titleId} set:html={title}></h1>
           <p class="wlede wa">{lede}</p>
+          {cta && (
+            <a class="wcta wa" href={cta.href} target="_blank" rel="noopener">{cta.label} <span aria-hidden="true">↗</span></a>
+          )}
           <div class="wmeta wa">
             {meta.map((m) => <div><b>{m.label}</b>{m.value}</div>)}
           </div>
@@ -49,6 +54,9 @@ const titleId = `${id}t`;
         <p class="wkick wa">{kick}</p>
         <h1 class="wtitle wa" id={titleId} set:html={title}></h1>
         <p class="wlede wa">{lede}</p>
+        {cta && (
+          <a class="wcta wa" href={cta.href} target="_blank" rel="noopener">{cta.label} <span aria-hidden="true">↗</span></a>
+        )}
         <div class="wmeta wa">
           {meta.map((m) => <div><b>{m.label}</b>{m.value}</div>)}
         </div>
