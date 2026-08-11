@@ -23,6 +23,7 @@ const w1 = {
   lede: 'One web platform for a Norwegian consultancy to run its people and its work — clients, employees, orders, messaging and feedback, in real time. Co-built from scratch; shipped, live, and still running.',
   meta: [
     { label: 'Client', value: 'Brobyggere AS' },
+    { label: 'Role', value: 'Systemutvikler (software developer)' },
     { label: 'Year', value: '2025' },
     { label: 'Team', value: '2 developers' },
     { label: 'Status', value: 'Live' },
@@ -30,7 +31,7 @@ const w1 = {
   divider: 'Behind it',
   rows: [
     { h: 'The problem', p: 'Brobyggere had mobile apps, but operations lived scattered across tools — booking, HR and communication in different places, none of them talking. They needed close to everything in one place, on the web.' },
-    { h: 'What I did', p: 'My first industry project: I scoped the stack and set realistic expectations, then built the live chat, employee, customer and feedback modules — frontend logic and Firebase wiring, working AI-assisted the way modern teams do. I knew neither React nor Firebase at the start; learning while shipping a real product was the actual challenge, and it worked.' },
+    { h: 'What I did', p: 'My first industry project: I scoped the stack and set realistic expectations, then built the live chat, employee, customer and feedback modules — frontend logic and Firebase wiring. I chose React and Firebase knowing neither, and spent roughly the first four months building unassisted — that is where I actually learned them. AI assistance came later, in a codebase I had already built and could read. My teammate built the order and completed-order modules; I reviewed and quality-assured them. Learning while shipping to real users was the actual challenge, and it worked.' },
     { h: 'The tech', chips: ['React', 'Firebase', 'Real-time', 'Full CRUD', 'Live chat'] },
   ],
   mediaLabel: 'Recreated screens — fictional data (the product is confidential)',
@@ -45,15 +46,15 @@ const w2 = {
   meta: [
     { label: 'Context', value: 'MSc thesis, USN' },
     { label: 'Year', value: '2026' },
-    { label: 'Role', value: 'Solo — design & code' },
+    { label: 'Role', value: 'Solo — Blueprint by hand; RL AI-assisted' },
     { label: 'Status', value: 'Concluded' },
   ],
   cover: { img: flowCover.src, alt: 'Steroid Zombies — mid-wave gameplay' },
   rows: [
     { h: 'The game', p: 'WASD to move, mouse to aim, weapons to switch, buffs that spawn as resources run low. Each round sets a kill quota — and the fight answers back with more enemies, new types, harder ones.' },
-    { h: 'What I did', p: "Built the game solo in Unreal Engine 5 with Blueprints, designed the telemetry (health, damage taken, kills, accuracy, positioning, buff use), and ran a three-phase study: first test whether gameplay data can predict players' reported flow (15 players); then train a PPO reinforcement-learning agent against a simulated player, rewarding it for keeping each wave in a flow state; finally test the adaptive mode with 19 new players against static easy and hard modes." },
+    { h: 'What I did', p: "Built the entire game solo in Unreal Engine 5 — every system authored by hand in Blueprint, node by node, with no AI anywhere near it — and designed the telemetry (health, damage taken, kills, accuracy, positioning, buff use). Then ran a three-phase study: first test whether gameplay data can predict players' reported flow (15 players); then train a PPO reinforcement-learning agent against a simulated player, rewarding it for keeping each wave in a flow state; finally test the adaptive mode with 19 new players against static easy and hard modes. The machine-learning implementation was AI-assisted — the game and its systems were not." },
     { h: 'The honest result', p: "The adaptive mode scored the highest mean flow of the three modes, with the tightest spread — but not by a statistically significant margin, and the trained agent developed a bias toward always increasing difficulty. The sharpest finding: reward design and training setup mattered as much as the algorithm itself. Honestly framed in the thesis as a technical proof of concept, in a genre where this hadn't been tested before." },
-    { h: 'The tech', chips: ['Unreal Engine 5', 'Blueprints', 'Reinforcement learning', 'Dynamic difficulty adjustment', 'Python', 'Telemetry'] },
+    { h: 'The tech', chips: ['Unreal Engine 5', 'Blueprints', 'Dynamic difficulty adjustment', 'Telemetry', 'Reinforcement learning (AI-assisted)', 'Python (analysis)'] },
   ],
   mediaLabel: 'From the thesis — what the agent learned, and how it landed',
 };
