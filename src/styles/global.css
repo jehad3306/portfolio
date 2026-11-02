@@ -174,6 +174,37 @@ body::after{content:"";position:fixed;inset:0;z-index:100;pointer-events:none;op
 .shots3 img{width:100%;display:block;}
 .shots3 figcaption{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#9A8E74;padding:11px 15px;}
 
+/* nidaa slideshow — one screen at a time, manual arrows, no autoplay */
+.slideshow{position:relative;max-width:380px;margin:4px auto 0;}
+.slviewport{overflow:hidden;border:1px solid #DFD7C4;border-radius:22px;background:#FBF8F1;
+  box-shadow:0 10px 26px rgba(42,50,69,.08);}
+.sltrack{display:flex;transition:transform .45s var(--ease);will-change:transform;}
+.slide{min-width:100%;margin:0;cursor:zoom-in;}
+.slide img{width:100%;max-height:74vh;object-fit:contain;display:block;}
+.slide figcaption{font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:#9A8E74;padding:11px 15px;text-align:center;}
+.slnav{position:absolute;top:50%;transform:translateY(-50%);width:42px;height:42px;border-radius:50%;
+  border:1px solid #DFD7C4;background:rgba(255,253,248,.92);color:#2A3245;font-size:24px;line-height:1;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:2;
+  box-shadow:0 6px 16px rgba(42,50,69,.14);transition:transform .2s var(--ease),background .2s;}
+.slnav:hover{background:#fff;transform:translateY(-50%) scale(1.07);}
+.slnav.prev{left:10px;}
+.slnav.next{right:10px;}
+.sldots{display:flex;gap:8px;justify-content:center;margin-top:14px;}
+.sldot{width:8px;height:8px;border-radius:50%;border:none;background:#DFD7C4;cursor:pointer;padding:0;
+  transition:background .2s,transform .2s;}
+.sldot.on{background:#9A8E74;transform:scale(1.25);}
+
+/* wide variant — full-width desktop app screens (booking & HR carousel).
+   Breaks out of the 860px case column so the screens are not cramped. */
+.slideshow.appshow{max-width:none;width:min(1240px,95vw);margin-left:50%;transform:translateX(-50%);}
+.appshow .slviewport{background:#fff;border-color:#e3e6ea;}
+.appshow .slide{cursor:default;}
+.appshow .slide figcaption{color:#8a9099;}
+.appshow .slnav.prev{left:-6px;}
+.appshow .slnav.next{right:-6px;}
+@media(max-width:560px){.appshow .slnav.prev{left:4px;}.appshow .slnav.next{right:4px;}}
+
 .intro3{display:grid;grid-template-columns:1.15fr minmax(230px,320px);gap:min(6vw,60px);align-items:center;}
 .spot{background:#FBF8F1;border:1px solid #DFD7C4;border-radius:26px;overflow:hidden;cursor:zoom-in;
   box-shadow:0 18px 44px rgba(42,50,69,.12);transition:transform .25s var(--ease);margin:0;}

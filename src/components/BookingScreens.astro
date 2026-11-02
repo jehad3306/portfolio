@@ -1,0 +1,636 @@
+---
+// Recreated BBR (Brobyggere) admin screens — faithful rebuilds of the real UI
+// with fictional data, since the live product is confidential. Shown as a
+// horizontal carousel inside World 1. Three screens: Bestillinger, Ansatte, Hjem.
+const icons = {
+  home: '<path d="M3 9.5 10 3l7 6.5"/><path d="M5 9v8h10V9"/>',
+  orders: '<rect x="5" y="3.5" width="10" height="13.5" rx="2"/><path d="M7.5 3.5h5v2h-5z"/><path d="M7.5 9h5M7.5 12h5M7.5 15h3"/>',
+  customers: '<rect x="3.5" y="4.5" width="13" height="11" rx="2"/><circle cx="7.5" cy="9" r="1.8"/><path d="M5.3 13.5c.3-1.6 4.1-1.6 4.4 0"/><path d="M12 9h2.5M12 11.5h2.5"/>',
+  people: '<circle cx="7" cy="7.2" r="2.1"/><circle cx="13" cy="8" r="1.7"/><path d="M3.3 14.8c.2-2.4 7.2-2.4 7.4 0M11 14.8c.1-1.7 5.6-1.9 5.7 0"/>',
+  chat: '<path d="M4 5h12v8H9l-3 3v-3H4z"/><path d="M7 8.5h6M7 11h4"/>',
+  star: '<path d="M10 3l2 4 4 .5-3 3 .8 4L10 12.4 6.2 14.5 7 10.5l-3-3 4-.5z"/>',
+  form: '<rect x="4" y="4" width="12" height="12" rx="2"/><path d="M7 8h6M7 11h6M7 14h3"/>',
+  out: '<path d="M8.5 4H5v12h3.5"/><path d="M12 7.5 15 10l-3 2.5M9 10h6"/>',
+};
+const nav = [
+  { label: 'Hjem', key: 'home' },
+  { label: 'Bestillinger', key: 'orders' },
+  { label: 'Kunder', key: 'customers' },
+  { label: 'Ansatte', key: 'people' },
+  { label: 'Meldinger', key: 'chat' },
+  { label: 'Tilbakemelding', key: 'star' },
+  { label: 'Form Submissions', key: 'form' },
+  { label: 'Logg ut', key: 'out' },
+];
+const employees = [
+  { n: 'Emma Johansen',   a: 'Nygårdsgaten 14, 5015 Bergen',  t: '+47 412 33 901', k: 'Barnehageassistent', s: 'Aktiv' },
+  { n: 'Noah Andersen',   a: 'Fjellveien 8, 5019 Bergen',     t: '+47 476 22 118', k: 'Pedagogisk leder',   s: 'Erfaren' },
+  { n: 'Olivia Nilsen',   a: 'Møhlenpris 3, 5006 Bergen',     t: '+47 401 55 240', k: 'Fagarbeider',        s: 'Erfaren' },
+  { n: 'William Haugen',  a: 'Danmarks plass 21, 5063 Bergen', t: '+47 450 90 133', k: 'Barnehageassistent', s: 'Aktiv' },
+  { n: 'Sofie Berg',      a: 'Landåsveien 9, 5096 Bergen',    t: '+47 489 71 806', k: 'Støttepedagog',      s: 'Erfaren' },
+];
+const orders = [
+  { c: 'Løvetann Barnehage',  rec: '17.09.2026 14:06', d: '23.09.2026', id: '1358', dep: 'Safari (0 til 3 år)', emp: 'Emma Johansen' },
+  { c: 'Soltoppen Barnehage', rec: '17.09.2026 14:05', d: '18.09.2026', id: '57e9', dep: 'Safari (0 til 3 år)', emp: 'Noah Andersen' },
+  { c: 'Regnbuen Barnehage',  rec: '17.09.2026 13:17', d: '23.09.2026', id: 'f42d', dep: 'Gul (1 til 2 år)',    emp: 'Olivia Nilsen' },
+];
+const convos = [
+  { n: 'Emma Johansen',    i: '', c: '#dfe3e8' },
+  { n: 'Noah Andersen',    i: '', c: '#dfe3e8' },
+  { n: 'Olivia Nilsen',    i: '', c: '#dfe3e8', on: true },
+  { n: 'Henrik Dahl',      i: 'H', c: '#22b8cf' },
+  { n: 'Hanna Moe',        i: 'H', c: '#22b8cf' },
+  { n: 'Jakob Lie',        i: '', c: '#dfe3e8' },
+  { n: 'Aksel Ruud',       i: 'A', c: '#cbb2e8' },
+  { n: 'Mathea Solberg',   i: '', c: '#dfe3e8' },
+  { n: 'Ingrid Vik',       i: 'I', c: '#34c759' },
+  { n: 'Johannes Berg',    i: '', c: '#dfe3e8' },
+];
+const feedback = [
+  { n: 'Mats Eide',     r: 'bra',  t: '', d: '16.09.2026' },
+  { n: 'Julia Haugen',  r: 'bra',  t: 'Flink.', d: '10.09.2026' },
+  { n: 'Even Lund',     r: 'bra',  t: 'Even gjør en strålende innsats hos oss!', d: '09.09.2026' },
+  { n: 'Sara Moen',     r: 'bra',  t: '', d: '09.09.2026' },
+  { n: 'Oliver Dahl',   r: 'bra',  t: '', d: '09.09.2026' },
+  { n: 'Thea Berg',     r: 'forb', t: '', d: '09.09.2026' },
+  { n: 'Jonas Vik',     r: 'forb', t: '', d: '09.09.2026' },
+  { n: 'Julia Nilsen',  r: 'bra',  t: 'de var veldig fornøyd med Julia. Hun var på også hvor hun trengtes', d: '08.09.2026' },
+  { n: 'Mina Solheim',  r: 'bra',  t: 'hun såg hvor det var behov for henne. en god vikar', d: '03.09.2026' },
+  { n: 'Erik Aas',      r: 'bra',  t: '', d: '03.09.2026' },
+];
+const customers = [
+  { n: 'Løvetann Barnehage',     e: 'post@lovetann-bhg.no',    t: '+47 22 45 11 80', a: 'Markveien 12, 0554 Oslo',          g: 'linear-gradient(150deg,#2c7a7b,#e8a04a 70%,#c0453a)' },
+  { n: 'Soltoppen Barnehage',    e: 'kontakt@soltoppen.no',    t: '+47 22 60 33 09', a: 'Trondheimsveien 88, 0565 Oslo',    g: 'linear-gradient(150deg,#7c3aed,#4267b2 60%,#22b8cf)' },
+  { n: 'Regnbuen Barnehage',     e: 'hei@regnbuen-bhg.no',     t: '+47 23 14 77 20', a: 'Sofienberggata 5, 0558 Oslo',      g: 'linear-gradient(150deg,#1b2230,#3a4a63 70%,#e8a04a)' },
+  { n: 'Maurtua Barnehage',      e: 'post@maurtua.no',         t: '+47 22 38 90 14', a: 'Thorvald Meyers gate 40, 0555 Oslo', g: 'linear-gradient(150deg,#2c7a7b,#e8a04a 70%,#c0453a)' },
+  { n: 'Stjerneskudd Barnehage', e: 'kontakt@stjerneskudd.no', t: '+47 21 09 55 60', a: 'Toftes gate 3, 0552 Oslo',         g: 'linear-gradient(150deg,#b56a4a,#d9a06a 70%,#efe0c8)' },
+  { n: 'Eventyrskogen Barnehage',e: 'post@eventyrskogen.no',   t: '+47 22 71 44 02', a: 'Vogts gate 21, 0474 Oslo',         g: 'linear-gradient(150deg,#2c7a7b,#e8a04a 70%,#c0453a)' },
+];
+---
+<div class="slideshow appshow" id="bookShow">
+  <div class="slviewport">
+    <div class="sltrack">
+
+      <!-- SCREEN 1 — Bestillinger -->
+      <figure class="slide ab-slide">
+        <div class="ab-win">
+          <div class="ab-bar"><i class="ab-dot-r"></i><i class="ab-dot-y"></i><i class="ab-dot-g"></i><span class="ab-url">app.brobyggere.no/bestillinger</span></div>
+          <div class="ab-app">
+            <aside class="ab-side">
+              <div class="ab-logo">B<b>B</b>R</div>
+              <div class="lbl">Management <span class="skjul">◂ Skjul</span></div>
+              <nav class="ab-nav">
+                {nav.map((it) => (
+                  <a class={`${it.label === 'Bestillinger' ? 'on' : ''} ${it.key === 'out' ? 'out' : ''}`}>
+                    <svg viewBox="0 0 20 20" set:html={icons[it.key]}></svg>{it.label}
+                  </a>
+                ))}
+              </nav>
+            </aside>
+            <div class="ab-main">
+              <div class="ab-top">
+                <div class="ab-city">⚜ Oslo ▾</div>
+                <div class="right"><span>⌕</span><span class="ab-bell">🔔<b>19</b></span><span>⚙</span><span class="ab-ava"></span></div>
+              </div>
+              <div class="ab-content">
+                <h1 class="ab-h1">Bestillinger</h1>
+                <p class="ab-sub">Administrer bestillinger i oslo</p>
+                <div class="ab-toolbar">
+                  <span class="ab-search">Søk etter kunde…</span>
+                  <span class="ab-pill" style="padding:8px 12px">3 per side ▾</span>
+                  <span class="ab-add" style="background:#15a34a">⟳ Oppdater</span>
+                </div>
+                <div class="ab-filters"><span class="ab-chipx">✕</span><span class="ab-pill">2026 ▾</span><span class="ab-pill">September ▾</span><span class="ab-pill">▦ Alle dager</span></div>
+                <div class="ab-stats">
+                  <div class="ab-stat"><div class="k">Tildelt i dag</div><div class="v">8</div><div class="ab-up">▲ 33.3% <span style="color:#8a9099">vs i går</span></div></div>
+                  <div class="ab-stat"><div class="k">Denne uken</div><div class="v">35</div><div class="ab-down">▼ 22.2% <span style="color:#8a9099">vs forrige uke</span></div></div>
+                  <div class="ab-stat"><div class="k">Denne måneden</div><div class="v">130</div><div class="ab-up">▲ 34.0% <span style="color:#8a9099">vs forrige måned</span></div></div>
+                </div>
+                <div class="ab-tabs">
+                  <span>Vanlige <small>0</small></span><span>Tildelte <small>0</small></span><span>Åpne vakter <small>0</small></span><span class="on">Fullførte <small>99</small></span>
+                </div>
+                <div class="ab-orders">
+                  {orders.map((o) => (
+                    <div class="ab-order">
+                      <div class="ban"></div>
+                      <div class="bod">
+                        <div class="ab-cust">{o.c}</div>
+                        <div class="ab-meta"><span>👤 1 Barnehageassistent</span><span>🗓 Mottatt: {o.rec}</span></div>
+                        <div class="ab-row2"><span>📅 {o.d}</span><span>🕐 08:30 – 16:00</span></div>
+                        <div class="ab-id">{o.id}</div>
+                        <div class="ab-age"><span>Alder: <b>0-3 år</b></span><span>Avdeling: <b>{o.dep}</b></span></div>
+                        <div class="ab-note">🙂 ingen kommentar</div>
+                        <span class="ab-btn">↺ Ufullført</span>
+                        <div class="ab-assigned">👥 TILDELT(E) ANSATTE</div>
+                        <div class="ab-emp"><span class="pf"></span>{o.emp}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div class="ab-pag"><span>«</span><span>‹</span><span>1</span><span class="on">2</span><span>3</span><span>4</span><span>…</span><span>33</span><span>›</span><span>»</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption>Bestillinger — orders &amp; shift assignment</figcaption>
+      </figure>
+
+      <!-- SCREEN 2 — Ansatte -->
+      <figure class="slide ab-slide">
+        <div class="ab-win">
+          <div class="ab-bar"><i class="ab-dot-r"></i><i class="ab-dot-y"></i><i class="ab-dot-g"></i><span class="ab-url">app.brobyggere.no/ansatte</span></div>
+          <div class="ab-app">
+            <aside class="ab-side">
+              <div class="ab-logo">B<b>B</b>R</div>
+              <div class="lbl">Management <span class="skjul">◂ Skjul</span></div>
+              <nav class="ab-nav">
+                {nav.map((it) => (
+                  <a class={`${it.label === 'Ansatte' ? 'on' : ''} ${it.key === 'out' ? 'out' : ''}`}>
+                    <svg viewBox="0 0 20 20" set:html={icons[it.key]}></svg>{it.label}
+                  </a>
+                ))}
+              </nav>
+            </aside>
+            <div class="ab-main">
+              <div class="ab-top">
+                <div class="ab-city">⚜ Bergen ▾</div>
+                <div class="right"><span>⌕</span><span class="ab-bell">🔔<b>19</b></span><span>⚙</span><span class="ab-ava"></span></div>
+              </div>
+              <div class="ab-content">
+                <h1 class="ab-h1">Ansatte</h1>
+                <p class="ab-sub">Administrer ansatte i bergen</p>
+                <div class="ab-tabrow"><span class="on">Alle <small class="dark">251</small></span><span>Tilgjengelige</span><span>Slettede</span><span>Erfarne</span></div>
+                <div class="ab-toolbar">
+                  <span class="ab-search">Søk etter navn…</span>
+                  <span class="ab-dots"><i style="background:#22c55e"></i><i style="background:#8b5cf6"></i><i style="background:#22b8cf"></i><i style="background:#f6c445"></i><i style="background:#cbd2da"></i><i style="background:#b4793a"></i><i style="background:#d58bf0"></i></span>
+                  <span class="ab-add">＋ Ny ansatt</span>
+                </div>
+                <table class="ab-table">
+                  <thead><tr><th>Navn</th><th>Adresse</th><th>Telefon</th><th>Kompetanse</th><th style="text-align:right">Status</th></tr></thead>
+                  <tbody>
+                    {employees.map((e) => (
+                      <tr>
+                        <td><div class="ab-nameC"><span class="pf"></span>{e.n}</div></td>
+                        <td style="color:#596070">{e.a}</td>
+                        <td style="color:#596070">{e.t}</td>
+                        <td style="color:#596070">{e.k}</td>
+                        <td style="text-align:right"><span class={`ab-badge ${e.s === 'Aktiv' ? 'aktiv' : 'erfaren'}`}>{e.s}</span></td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <div class="ab-tablefoot"><span>Viser 1-5 av 251 ansatte</span>
+                  <div class="ab-pag"><span>‹</span><span class="on">1</span><span>2</span><span>3</span><span>…</span><span>51</span><span>›</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption>Ansatte — the employee register</figcaption>
+      </figure>
+
+      <!-- SCREEN 3 — Hjem -->
+      <figure class="slide ab-slide">
+        <div class="ab-win">
+          <div class="ab-bar"><i class="ab-dot-r"></i><i class="ab-dot-y"></i><i class="ab-dot-g"></i><span class="ab-url">app.brobyggere.no/hjem</span></div>
+          <div class="ab-app">
+            <aside class="ab-side">
+              <div class="ab-logo">B<b>B</b>R</div>
+              <div class="lbl">Management <span class="skjul">◂ Skjul</span></div>
+              <nav class="ab-nav">
+                {nav.map((it) => (
+                  <a class={`${it.label === 'Hjem' ? 'on' : ''} ${it.key === 'out' ? 'out' : ''}`}>
+                    <svg viewBox="0 0 20 20" set:html={icons[it.key]}></svg>{it.label}
+                  </a>
+                ))}
+              </nav>
+            </aside>
+            <div class="ab-main">
+              <div class="ab-top">
+                <div class="ab-city">⚜ Oslo ▾</div>
+                <div class="right"><span>⌕</span><span class="ab-bell">🔔<b>19</b></span><span>⚙</span><span class="ab-ava"></span></div>
+              </div>
+              <div class="ab-content">
+                <h1 class="ab-h1">Hjem</h1>
+                <p class="ab-sub">Velkommen til HR-systemet for oslo</p>
+                <div class="ab-herorow">
+                  <div class="ab-hero">
+                    <h2>Velkommen tilbake 👋</h2>
+                    <p class="ab-heroname">Jehad</p>
+                    <p class="ab-herotxt">Administrer din HR-avdeling effektivt med våre verktøy for ansatte, kunder og bestillinger.</p>
+                    <span class="ab-cta">Kom i gang</span>
+                  </div>
+                  <div class="ab-news">
+                    <span class="ab-newstag">Nyheter</span>
+                    <div class="ab-newsimg"></div>
+                    <div class="ab-newsbod"><b>Sommerferieplaner 2026</b><span>Informasjon om sommerferie og dekning</span></div>
+                  </div>
+                </div>
+                <div class="ab-cards2">
+                  <div class="ab-chart">
+                    <h3>Ansatte per avdeling</h3><p class="ab-csub">Fordeling av ansatte</p>
+                    <div class="ab-bars">
+                      <div class="col"><div class="ab-bar" style="height:100%;background:#22b8cf"></div><span>Bergen</span><em>142</em></div>
+                      <div class="col"><div class="ab-bar" style="height:48%;background:#ff6b4a"></div><span>Oslo</span><em>68</em></div>
+                      <div class="col"><div class="ab-bar" style="height:26%;background:#22c55e"></div><span>Stavanger</span><em>37</em></div>
+                      <div class="col"><div class="ab-bar" style="height:10%;background:#f6c445"></div><span>Agder</span><em>14</em></div>
+                    </div>
+                  </div>
+                  <div class="ab-chart">
+                    <h3>Kunder per avdeling</h3><p class="ab-csub">Fordeling av kunder</p>
+                    <div class="ab-donutwrap">
+                      <div class="ab-donut"><span>261</span></div>
+                      <ul class="ab-legend">
+                        <li><i style="background:#22b8cf"></i>Bergen <b>66%</b></li>
+                        <li><i style="background:#22c55e"></i>Stavanger <b>15%</b></li>
+                        <li><i style="background:#ff6b4a"></i>Oslo <b>14%</b></li>
+                        <li><i style="background:#f6c445"></i>Agder <b>5%</b></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption>Hjem — the overview dashboard</figcaption>
+      </figure>
+
+      <!-- SCREEN 4 — Meldinger -->
+      <figure class="slide ab-slide">
+        <div class="ab-win">
+          <div class="ab-bar"><i class="ab-dot-r"></i><i class="ab-dot-y"></i><i class="ab-dot-g"></i><span class="ab-url">app.brobyggere.no/meldinger</span></div>
+          <div class="ab-app">
+            <aside class="ab-side">
+              <div class="ab-logo">B<b>B</b>R</div>
+              <div class="lbl">Management <span class="skjul">◂ Skjul</span></div>
+              <nav class="ab-nav">
+                {nav.map((it) => (
+                  <a class={`${it.label === 'Meldinger' ? 'on' : ''} ${it.key === 'out' ? 'out' : ''}`}>
+                    <svg viewBox="0 0 20 20" set:html={icons[it.key]}></svg>{it.label}
+                  </a>
+                ))}
+              </nav>
+            </aside>
+            <div class="ab-main">
+              <div class="ab-top">
+                <div class="ab-city">⚜ Bergen ▾</div>
+                <div class="right"><span>⌕</span><span class="ab-bell">🔔<b>19</b></span><span>⚙</span><span class="ab-ava"></span></div>
+              </div>
+              <div class="ab-msg">
+                <div class="ab-conv">
+                  <h2>Meldinger</h2>
+                  <div class="ab-send"><span class="emp">👥 Send til ansatte</span><span class="cust">👤 Send til kunder</span></div>
+                  <div class="ab-convsearch">⌕ Søk etter samtaler…</div>
+                  <div class="ab-filter">Alle ▾</div>
+                  <div class="ab-convlist">
+                    {convos.map((c) => (
+                      <div class={`ab-convitem ${c.on ? 'on' : ''}`}>
+                        <span class="pf" style={`background:${c.c}`}>{c.i}</span>{c.n}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div class="ab-thread">
+                  <div class="ab-threadhead"><span class="pf"></span><div><div style="font-weight:600;font-size:13px">Olivia Nilsen</div><div class="ab-online">● Online</div></div></div>
+                  <div class="ab-threadbody">
+                    <div class="ab-bubble">Hei alle sammen🙂
+
+En liten påminnelse om å gi beskjed til oss dersom dere bytter adresse, slik at vi alltid har riktig informasjon registrert. Dette er ekstra viktig fordi vi prøver å tilpasse oppdragene etter hvor dere bor.
+
+Send oss derfor en melding dersom adressen deres har endret seg🏡
+
+Mvh
+Oss i Brobyggere<time>16.09.26, 09:53</time></div>
+                  </div>
+                  <div class="ab-input"><span>Skriv en melding…</span><span class="ab-sendbtn">➤</span></div>
+                </div>
+                <div class="ab-info">
+                  <div class="pf"></div>
+                  <div class="nm">Olivia Nilsen</div>
+                  <div class="rl">Ansatt</div>
+                  <h4>Informasjon</h4>
+                  <div class="fld"><b>📍 Adresse</b>Møhlenpris 3, 5006 Bergen</div>
+                  <div class="fld"><b>📞 Telefon</b>+47 401 55 240</div>
+                  <div class="fld"><b>✉ E-post</b>olivia.nilsen@example.no</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption>Meldinger — staff &amp; customer messaging</figcaption>
+      </figure>
+
+      <!-- SCREEN 5 — Tilbakemelding -->
+      <figure class="slide ab-slide">
+        <div class="ab-win">
+          <div class="ab-bar"><i class="ab-dot-r"></i><i class="ab-dot-y"></i><i class="ab-dot-g"></i><span class="ab-url">app.brobyggere.no/tilbakemelding</span></div>
+          <div class="ab-app">
+            <aside class="ab-side">
+              <div class="ab-logo">B<b>B</b>R</div>
+              <div class="lbl">Management <span class="skjul">◂ Skjul</span></div>
+              <nav class="ab-nav">
+                {nav.map((it) => (
+                  <a class={`${it.label === 'Tilbakemelding' ? 'on' : ''} ${it.key === 'out' ? 'out' : ''}`}>
+                    <svg viewBox="0 0 20 20" set:html={icons[it.key]}></svg>{it.label}
+                  </a>
+                ))}
+              </nav>
+            </aside>
+            <div class="ab-main">
+              <div class="ab-top">
+                <div class="ab-city">⚜ Bergen ▾</div>
+                <div class="right"><span>⌕</span><span class="ab-bell">🔔<b>19</b></span><span>⚙</span><span class="ab-ava"></span></div>
+              </div>
+              <div class="ab-content">
+                <h1 class="ab-h1">Tilbakemelding</h1>
+                <p class="ab-sub">Oversikt over kunders vurderinger av ansatte</p>
+                <div class="ab-fbhead">
+                  <span class="ab-fbbadge bra">Bra 467</span>
+                  <span class="ab-fbbadge ok">Ok 32</span>
+                  <span class="ab-fbbadge forb">Forbedring 55</span>
+                  <span class="ab-fbsearch">Søk etter ansatt, kunde eller kommentar…</span>
+                </div>
+                <div class="ab-fbgrid">
+                  {feedback.map((f) => (
+                    <div class={`ab-fbcard ${f.r}`}>
+                      <div class="ab-fbtop">
+                        <div class="ab-fbname"><span class="pf"></span>{f.n}</div>
+                        <span class={`ab-rate ${f.r}`}>{f.r === 'bra' ? 'Bra' : 'Forbedring'}</span>
+                      </div>
+                      <div class="ab-fbbottom">
+                        <span class={`ab-fbtxt ${f.t ? '' : 'empty'}`}>{f.t || 'Ingen kommentar'}</span>
+                        <span class="ab-fbdate">{f.d}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption>Tilbakemelding — customer ratings of staff</figcaption>
+      </figure>
+
+      <!-- SCREEN 6 — Kunder -->
+      <figure class="slide ab-slide">
+        <div class="ab-win">
+          <div class="ab-bar"><i class="ab-dot-r"></i><i class="ab-dot-y"></i><i class="ab-dot-g"></i><span class="ab-url">app.brobyggere.no/kunder</span></div>
+          <div class="ab-app">
+            <aside class="ab-side">
+              <div class="ab-logo">B<b>B</b>R</div>
+              <div class="lbl">Management <span class="skjul">◂ Skjul</span></div>
+              <nav class="ab-nav">
+                {nav.map((it) => (
+                  <a class={`${it.label === 'Kunder' ? 'on' : ''} ${it.key === 'out' ? 'out' : ''}`}>
+                    <svg viewBox="0 0 20 20" set:html={icons[it.key]}></svg>{it.label}
+                  </a>
+                ))}
+              </nav>
+            </aside>
+            <div class="ab-main">
+              <div class="ab-top">
+                <div class="ab-city">⚜ Oslo ▾</div>
+                <div class="right"><span>⌕</span><span class="ab-bell">🔔<b>19</b></span><span>⚙</span><span class="ab-ava"></span></div>
+              </div>
+              <div class="ab-content">
+                <div class="ab-kundhead">
+                  <div><h1 class="ab-h1">Kunder</h1><p class="ab-sub">Administrer kunder i oslo</p></div>
+                  <div class="ab-kundtool"><span class="ab-search" style="flex:none;width:170px">Søk etter kunde…</span><span class="ab-add">＋ Legg til Kunde</span></div>
+                </div>
+                <div class="ab-kundgrid">
+                  {customers.map((k) => (
+                    <div class="ab-kund">
+                      <div class="ab-kundcover" style={`background:${k.g}`}></div>
+                      <div class="ab-kundbod">
+                        <div class="ab-kundname">{k.n}</div>
+                        <div class="ab-kundfld"><b>Email</b>{k.e}<span class="cp">⧉</span></div>
+                        <div class="ab-kundfld"><b>Telefon</b>{k.t}<span class="cp">⧉</span></div>
+                        <div class="ab-kundfld"><b>Adresse</b>{k.a}<span class="cp">⧉</span></div>
+                        <div class="ab-kundacts"><i style="background:#15a34a">▤</i><i style="background:#7c3aed">☺</i><i style="background:#2b6cb0">✎</i><i style="background:#22b8cf">↺</i></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <figcaption>Kunder — the customer directory</figcaption>
+      </figure>
+
+    </div>
+  </div>
+  <button class="slnav prev" type="button" aria-label="Previous screen" data-dir="-1">‹</button>
+  <button class="slnav next" type="button" aria-label="Next screen" data-dir="1">›</button>
+  <div class="sldots" aria-hidden="true">
+    <button class="sldot" type="button" data-to="0" aria-label="Screen 1"></button>
+    <button class="sldot" type="button" data-to="1" aria-label="Screen 2"></button>
+    <button class="sldot" type="button" data-to="2" aria-label="Screen 3"></button>
+    <button class="sldot" type="button" data-to="3" aria-label="Screen 4"></button>
+    <button class="sldot" type="button" data-to="4" aria-label="Screen 5"></button>
+    <button class="sldot" type="button" data-to="5" aria-label="Screen 6"></button>
+  </div>
+</div>
+
+<style>
+  .ab-slide { cursor: default; }
+  .ab-win { border:1px solid #e3e6ea; border-radius:14px; overflow:hidden; background:#fff; margin:0 2px; }
+  .ab-bar { display:flex; align-items:center; gap:7px; padding:9px 12px; background:#f3f4f6; border-bottom:1px solid #e9ecef; }
+  .ab-bar i { width:10px; height:10px; border-radius:50%; display:inline-block; }
+  .ab-dot-r{background:#ff5f57}.ab-dot-y{background:#febc2e}.ab-dot-g{background:#28c840}
+  .ab-url { margin-left:8px; font:11px/1 "IBM Plex Mono",monospace; color:#8a9099; background:#fff; border:1px solid #e3e6ea; border-radius:7px; padding:5px 10px; }
+  .ab-app { display:grid; grid-template-columns:200px 1fr; background:#fff; color:#1f2430;
+    font-family:"Space Grotesk",system-ui,sans-serif; min-height:660px; text-align:left; }
+
+  .ab-side { border-right:1px solid #eef0f2; padding:16px 12px; }
+  .ab-logo { font-family:"Syne",sans-serif; font-weight:800; font-size:20px; color:#22b8cf; margin:2px 4px 16px; }
+  .ab-logo b { color:#2b6cb0; }
+  .ab-side .lbl { font:9px/1 "IBM Plex Mono",monospace; letter-spacing:.16em; color:#9aa1ab; text-transform:uppercase;
+    margin:0 4px 12px; display:flex; justify-content:space-between; align-items:center; }
+  .ab-side .skjul { color:#7c3aed; background:#f3eaff; border-radius:6px; padding:3px 6px; }
+  .ab-nav a { display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:9px; color:#596070;
+    font-size:13px; text-decoration:none; margin-bottom:2px; }
+  .ab-nav svg { width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+  .ab-nav a.on { background:#e9f9ef; color:#15a34a; font-weight:600; }
+  .ab-nav a.out { color:#e2483a; }
+
+  .ab-main { display:flex; flex-direction:column; min-width:0; }
+  .ab-top { display:flex; align-items:center; justify-content:space-between; padding:14px 28px; border-bottom:1px solid #eef0f2; }
+  .ab-city { font-size:13px; font-weight:600; }
+  .ab-top .right { display:flex; align-items:center; gap:13px; color:#8a9099; font-size:14px; }
+  .ab-bell { position:relative; }
+  .ab-bell b { position:absolute; top:-8px; right:-9px; background:#ef4444; color:#fff; font-size:8px; border-radius:9px; padding:1px 4px; font-weight:700; }
+  .ab-ava { width:26px; height:26px; border-radius:50%; background:#1b2230; display:inline-block; }
+
+  .ab-content { padding:26px 34px; }
+  .ab-h1 { font-family:"Syne",sans-serif; font-weight:700; font-size:23px; margin:0; }
+  .ab-sub { color:#8a9099; font-size:12px; margin:3px 0 16px; }
+
+  .ab-toolbar { display:flex; gap:10px; align-items:center; margin-bottom:12px; }
+  .ab-search { flex:1; border:1px solid #eef0f2; border-radius:10px; padding:9px 12px; font-size:12px; color:#9aa1ab; }
+  .ab-add { background:#141a24; color:#fff; border-radius:10px; padding:9px 13px; font-size:12px; white-space:nowrap; }
+  .ab-dots { display:flex; gap:5px; }
+  .ab-dots i { width:16px; height:16px; border-radius:50%; display:inline-block; }
+
+  .ab-filters { display:flex; gap:8px; align-items:center; margin-bottom:14px; }
+  .ab-chipx { width:24px; height:24px; border-radius:7px; background:#fdecec; color:#ef4444; display:flex; align-items:center; justify-content:center; font-size:11px; }
+  .ab-pill { background:#f3f4f6; border-radius:8px; padding:6px 10px; font-size:11px; color:#596070; }
+
+  .ab-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:16px; }
+  .ab-stat { border:1px solid #eef0f2; border-radius:14px; padding:13px 15px; }
+  .ab-stat .k { font-size:11px; color:#8a9099; }
+  .ab-stat .v { font-size:26px; font-weight:700; margin:4px 0; }
+  .ab-up { color:#15a34a; font-size:11px; }
+  .ab-down { color:#ef4444; font-size:11px; }
+
+  .ab-tabs { display:flex; gap:18px; border-bottom:1px solid #eef0f2; margin-bottom:14px; font-size:13px; color:#8a9099; }
+  .ab-tabs span { padding-bottom:9px; }
+  .ab-tabs .on { color:#15a34a; border-bottom:2px solid #15a34a; font-weight:600; }
+  .ab-tabs small { background:#eef0f2; border-radius:10px; padding:1px 7px; margin-left:4px; font-size:10px; }
+  .ab-tabs .on small { background:#d9f5e3; color:#15a34a; }
+
+  .ab-orders { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .ab-order { border:1px solid #eef0f2; border-radius:14px; overflow:hidden; }
+  .ab-order .ban { height:5px; background:linear-gradient(90deg,#34d399,#10b981); }
+  .ab-order .bod { padding:12px 13px; }
+  .ab-cust { font-weight:700; font-size:12px; margin-bottom:8px; }
+  .ab-meta { display:flex; flex-wrap:wrap; gap:4px 10px; font-size:10px; color:#596070; margin-bottom:7px; }
+  .ab-row2 { display:flex; gap:12px; font-size:10px; color:#596070; margin-bottom:7px; }
+  .ab-id { font:11px/1 "IBM Plex Mono",monospace; color:#9aa1ab; margin-bottom:8px; }
+  .ab-age { background:#f7f8fa; border:1px solid #eef0f2; border-radius:9px; padding:8px 10px; font-size:10px;
+    display:flex; justify-content:space-between; margin-bottom:8px; color:#596070; }
+  .ab-note { background:#fff8e6; border-left:3px solid #f6c445; border-radius:6px; padding:7px 9px; font-size:10px; color:#998433; margin-bottom:10px; }
+  .ab-btn { display:block; width:max-content; margin:0 auto; border:1px solid #cfe9ff; color:#2b6cb0; background:#f0f8ff; border-radius:20px; padding:5px 14px; font-size:11px; }
+  .ab-assigned { font-size:9px; color:#15a34a; font-weight:700; letter-spacing:.05em; margin:10px 0 6px; }
+  .ab-emp { display:flex; align-items:center; gap:8px; border:1px solid #eef0f2; border-radius:10px; padding:6px 8px; font-size:11px; }
+  .ab-emp .pf { width:22px; height:22px; border-radius:50%; background:#dfe3e8; display:inline-block; }
+
+  .ab-pag { display:flex; gap:6px; justify-content:center; margin-top:16px; }
+  .ab-pag span { min-width:26px; height:26px; display:flex; align-items:center; justify-content:center; border:1px solid #eef0f2; border-radius:7px; font-size:12px; color:#596070; }
+  .ab-pag .on { background:#15a34a; color:#fff; border-color:#15a34a; }
+
+  .ab-tabrow { display:flex; gap:20px; border-bottom:1px solid #eef0f2; margin-bottom:14px; font-size:13px; color:#8a9099; }
+  .ab-tabrow span { padding-bottom:9px; }
+  .ab-tabrow .on { color:#1f2430; border-bottom:2px solid #15a34a; font-weight:600; }
+  .ab-tabrow small.dark { background:#141a24; color:#fff; border-radius:10px; padding:1px 7px; font-size:10px; margin-left:4px; }
+
+  .ab-table { width:100%; border-collapse:collapse; font-size:12px; }
+  .ab-table th { text-align:left; color:#8a9099; font-weight:600; padding:10px 8px; border-bottom:1px solid #eef0f2; }
+  .ab-table td { padding:12px 8px; border-bottom:1px solid #f1f3f5; }
+  .ab-nameC { display:flex; align-items:center; gap:10px; font-weight:600; }
+  .ab-nameC .pf { width:30px; height:30px; border-radius:50%; background:#dfe3e8; display:inline-block; }
+  .ab-badge { border-radius:20px; padding:3px 11px; font-size:10px; font-weight:600; }
+  .ab-badge.aktiv { background:#e9f9ef; color:#15a34a; }
+  .ab-badge.erfaren { background:#f3eaff; color:#7c3aed; }
+  .ab-tablefoot { display:flex; align-items:center; justify-content:space-between; margin-top:14px; font-size:11px; color:#8a9099; }
+  .ab-tablefoot .ab-pag { margin-top:0; }
+
+  .ab-herorow { display:grid; grid-template-columns:1.5fr 1fr; gap:16px; margin-bottom:16px; }
+  .ab-hero { background:radial-gradient(120% 140% at 80% 20%,#2a3550 0%,#161d2e 60%); color:#fff; border-radius:16px; padding:22px 24px; }
+  .ab-hero h2 { font-family:"Syne",sans-serif; font-weight:700; font-size:22px; margin:0 0 6px; }
+  .ab-heroname { font-size:13px; color:#b9c2d6; margin:0 0 10px; }
+  .ab-herotxt { font-size:12px; color:#c6cede; max-width:320px; margin:0 0 16px; line-height:1.5; }
+  .ab-cta { background:#7c3aed; color:#fff; border-radius:9px; padding:9px 16px; font-size:12px; font-weight:600; }
+  .ab-news { border:1px solid #eef0f2; border-radius:16px; overflow:hidden; position:relative; }
+  .ab-newstag { position:absolute; top:12px; left:12px; z-index:2; background:#7c3aed; color:#fff; font-size:9px; letter-spacing:.1em; text-transform:uppercase; border-radius:6px; padding:3px 8px; }
+  .ab-newsimg { height:120px; background:linear-gradient(160deg,#e9b872,#b56a4a 55%,#3a4a63); }
+  .ab-newsbod { padding:12px 14px; display:flex; flex-direction:column; gap:3px; }
+  .ab-newsbod b { font-size:14px; }
+  .ab-newsbod span { font-size:11px; color:#8a9099; }
+
+  .ab-cards2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .ab-chart { border:1px solid #eef0f2; border-radius:16px; padding:16px 18px; }
+  .ab-chart h3 { font-family:"Syne",sans-serif; font-size:16px; margin:0; }
+  .ab-csub { font-size:11px; color:#8a9099; margin:3px 0 10px; }
+  .ab-bars { display:flex; align-items:flex-end; gap:22px; height:160px; padding:8px 8px 0; }
+  .ab-bars .col { display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%; flex:1; }
+  .ab-bar { width:40px; border-radius:8px 8px 0 0; }
+  .ab-bars span { font-size:10px; color:#8a9099; margin-top:8px; }
+  .ab-bars em { font-size:11px; font-weight:700; font-style:normal; color:#596070; }
+  .ab-donutwrap { display:flex; align-items:center; gap:22px; padding:8px 4px; }
+  .ab-donut { width:150px; height:150px; border-radius:50%; position:relative; flex:none;
+    background:conic-gradient(#22b8cf 0 66%,#22c55e 66% 81%,#ff6b4a 81% 95%,#f6c445 95% 100%); }
+  .ab-donut::after { content:""; position:absolute; inset:30px; background:#fff; border-radius:50%; }
+  .ab-donut span { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:18px; z-index:1; }
+  .ab-legend { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:9px; font-size:12px; color:#596070; }
+  .ab-legend li { display:flex; align-items:center; gap:8px; }
+  .ab-legend i { width:11px; height:11px; border-radius:3px; display:inline-block; }
+  .ab-legend b { margin-left:auto; color:#1f2430; }
+
+  /* Meldinger */
+  .ab-msg { display:grid; grid-template-columns:224px 1fr 196px; flex:1; min-height:0; }
+  .ab-conv { border-right:1px solid #eef0f2; padding:16px 14px; }
+  .ab-conv h2 { font-family:"Syne",sans-serif; font-weight:700; font-size:18px; margin:0 0 12px; }
+  .ab-send { display:flex; gap:8px; margin-bottom:10px; }
+  .ab-send span { flex:1; text-align:center; border-radius:8px; padding:7px 4px; font-size:10px; }
+  .ab-send .emp { background:#e9f9ef; color:#15a34a; }
+  .ab-send .cust { background:#fff1e9; color:#e8732e; }
+  .ab-convsearch { border:1px solid #eef0f2; border-radius:9px; padding:8px 10px; font-size:11px; color:#9aa1ab; margin-bottom:8px; }
+  .ab-filter { border:1px solid #eef0f2; border-radius:9px; padding:6px 10px; font-size:11px; color:#596070; width:max-content; margin-bottom:12px; }
+  .ab-convlist { display:flex; flex-direction:column; gap:3px; }
+  .ab-convitem { display:flex; align-items:center; gap:9px; padding:7px 8px; border-radius:9px; font-size:12px; color:#2f3744; }
+  .ab-convitem.on { background:#e9f9ef; }
+  .ab-convitem .pf { width:30px; height:30px; border-radius:50%; flex:none; display:flex; align-items:center; justify-content:center; color:#fff; font-size:12px; font-weight:600; }
+  .ab-thread { display:flex; flex-direction:column; min-width:0; }
+  .ab-threadhead { display:flex; align-items:center; gap:10px; padding:12px 16px; border-bottom:1px solid #eef0f2; }
+  .ab-threadhead .pf { width:34px; height:34px; border-radius:50%; background:#dfe3e8; flex:none; }
+  .ab-online { font-size:10px; color:#15a34a; }
+  .ab-threadbody { flex:1; padding:18px 16px; }
+  .ab-bubble { background:#e9f9ef; border-radius:14px; padding:12px 14px; font-size:12px; color:#2a3a2f; max-width:84%; margin-left:auto; line-height:1.5; white-space:pre-line; }
+  .ab-bubble time { display:block; font-size:9px; color:#8aa596; margin-top:8px; }
+  .ab-input { display:flex; align-items:center; gap:10px; border-top:1px solid #eef0f2; padding:12px 16px; }
+  .ab-input span:first-child { flex:1; border:1px solid #eef0f2; border-radius:20px; padding:9px 14px; font-size:12px; color:#9aa1ab; }
+  .ab-sendbtn { width:34px; height:34px; border-radius:50%; background:#eef7ff; color:#2b6cb0; display:flex; align-items:center; justify-content:center; flex:none; }
+  .ab-info { border-left:1px solid #eef0f2; padding:18px 16px; text-align:center; }
+  .ab-info .pf { width:60px; height:60px; border-radius:50%; background:#dfe3e8; margin:0 auto 8px; }
+  .ab-info .nm { font-weight:600; font-size:13px; }
+  .ab-info .rl { font-size:11px; color:#8a9099; margin-bottom:16px; }
+  .ab-info h4 { font-size:11px; text-align:left; border-bottom:1px solid #eef0f2; padding-bottom:8px; margin:0 0 12px; }
+  .ab-info .fld { text-align:left; font-size:11px; margin-bottom:11px; color:#2f3744; }
+  .ab-info .fld b { display:block; font-size:9px; letter-spacing:.07em; color:#9aa1ab; text-transform:uppercase; font-weight:600; margin-bottom:2px; }
+
+  /* Tilbakemelding */
+  .ab-fbhead { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+  .ab-fbbadge { border-radius:20px; padding:5px 13px; font-size:12px; font-weight:600; }
+  .ab-fbbadge.bra { background:#e9f9ef; color:#15a34a; }
+  .ab-fbbadge.ok { background:#fff6e0; color:#c99a1e; }
+  .ab-fbbadge.forb { background:#fdecec; color:#e2483a; }
+  .ab-fbsearch { margin-left:auto; border:1px solid #eef0f2; border-radius:9px; padding:8px 12px; font-size:11px; color:#9aa1ab; }
+  .ab-fbgrid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .ab-fbcard { border:1px solid #eef0f2; border-left-width:4px; border-radius:12px; padding:12px 14px; }
+  .ab-fbcard.bra { border-left-color:#22c55e; }
+  .ab-fbcard.forb { border-left-color:#ff6b4a; background:#fbfbfc; }
+  .ab-fbtop { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+  .ab-fbname { display:flex; align-items:center; gap:9px; font-weight:600; font-size:12px; }
+  .ab-fbname .pf { width:30px; height:30px; border-radius:50%; background:#dfe3e8; flex:none; }
+  .ab-rate { border-radius:16px; padding:2px 11px; font-size:10px; font-weight:600; }
+  .ab-rate.bra { background:#e9f9ef; color:#15a34a; }
+  .ab-rate.forb { background:#fff1ec; color:#ff6b4a; border:1px solid #ffd9cc; }
+  .ab-fbbottom { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .ab-fbtxt { font-size:11px; color:#4a515f; }
+  .ab-fbtxt.empty { font-style:italic; color:#9aa1ab; }
+  .ab-fbdate { font-size:10px; color:#9aa1ab; white-space:nowrap; }
+
+  /* Kunder */
+  .ab-kundhead { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:18px; }
+  .ab-kundtool { display:flex; gap:10px; align-items:center; }
+  .ab-kundgrid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+  .ab-kund { border:1px solid #eef0f2; border-radius:16px; overflow:hidden; box-shadow:0 6px 18px rgba(20,26,40,.05); }
+  .ab-kundcover { height:78px; }
+  .ab-kundbod { padding:12px 14px; }
+  .ab-kundname { font-weight:700; font-size:12px; margin-bottom:10px; }
+  .ab-kundfld { display:flex; align-items:center; gap:7px; font-size:10px; color:#4a515f; margin-bottom:6px; }
+  .ab-kundfld b { color:#9aa1ab; font-weight:600; width:46px; flex:none; font-size:9px; letter-spacing:.04em; text-transform:uppercase; }
+  .ab-kundfld .cp { margin-left:auto; color:#c3cad2; }
+  .ab-kundacts { display:flex; gap:8px; justify-content:center; margin-top:12px; }
+  .ab-kundacts i { width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:11px; }
+
+  @media (max-width:640px) {
+    .ab-app { grid-template-columns:1fr; }
+    .ab-side { display:none; }
+    .ab-orders, .ab-stats, .ab-cards2, .ab-herorow, .ab-fbgrid, .ab-kundgrid { grid-template-columns:1fr; }
+    .ab-msg { grid-template-columns:1fr; }
+    .ab-conv, .ab-info { display:none; }
+  }
+</style>
